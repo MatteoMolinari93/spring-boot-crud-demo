@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.molim.springboot.cruddemo.entity.Employee;
 
-public interface EmplyeeDAO {
+public interface EmployeeDAO {
 	
 	public List<Employee> findAll();
 

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.molim.springboot.cruddemo.entity.Employee;
 
 @Repository
-public class EmployeeDAOImpl implements EmplyeeDAO {
+public class EmployeeDAOImpl implements EmployeeDAO {
 	
 	@Autowired
 	private EntityManager entityManager;
