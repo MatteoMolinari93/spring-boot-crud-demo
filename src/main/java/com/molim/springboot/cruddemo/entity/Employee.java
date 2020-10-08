@@ -7,9 +7,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="employee")
-public class Employee {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class Employee extends RepresentationModel<Employee> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

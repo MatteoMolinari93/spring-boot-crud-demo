@@ -3,6 +3,9 @@ package com.molim.springboot.cruddemo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +27,19 @@ public class EmployeeController {
 	
 	
 	@GetMapping()
-	private List<Employee> getEmployees() {
-		return employeeService.findAll();
+	private CollectionModel<Employee> getEmployees() {
+		List<Employee> employees = employeeService.findAll();
+		for(Employee employee : employees) {
+			employee.add(WebMvcLinkBuilder.linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel());
+		}
+		Link link = WebMvcLinkBuilder.linkTo(EmployeeController.class).withSelfRel();
+		return CollectionModel.of(employees, link);
 	}
 	
 	@GetMapping("/{id}")
 	private Employee getEmployee(@PathVariable() int id) {
-		return employeeService.findById(id);
+		Employee employee = employeeService.findById(id);
+		return employee.add(WebMvcLinkBuilder.linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel());
 	}
 	
 	@PostMapping()
