@@ -3,9 +3,8 @@ package com.molim.springboot.cruddemo.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +18,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 	@Override
 	public List<Employee> findAll() {
-		Session currentSession = entityManager.unwrap(Session.class);
-		Query<Employee> theQuery = currentSession.createQuery("from Employee", Employee.class);
+		TypedQuery<Employee> theQuery = entityManager.createQuery("from Employee", Employee.class);
 		
 		List<Employee> employees = theQuery.getResultList();
 		
@@ -29,21 +27,19 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 	@Override
 	public Employee findById(int id) {
-		Session currentSession = entityManager.unwrap(Session.class);
-		return currentSession.get(Employee.class, id);
+		return entityManager.find(Employee.class, id);
 	}
 
 	@Override
 	public void save(Employee employee) {
-		Session currentSession = entityManager.unwrap(Session.class);
-		currentSession.saveOrUpdate(employee);
+		Employee dbEmployee = entityManager.merge(employee);
+		employee.setId(dbEmployee.getId());
 	}
 
 	@Override
 	public void deleteById(int id) {
-		Session currentSession = entityManager.unwrap(Session.class);
-		Employee employee = currentSession.get(Employee.class, id);
-		currentSession.delete(employee);
+		Employee employee = entityManager.find(Employee.class, id);
+		entityManager.remove(employee);
 	}
 
 }
