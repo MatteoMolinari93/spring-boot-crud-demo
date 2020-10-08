@@ -30,7 +30,7 @@ public class EmployeeController {
 	private CollectionModel<Employee> getEmployees() {
 		List<Employee> employees = employeeService.findAll();
 		for(Employee employee : employees) {
-			employee.add(WebMvcLinkBuilder.linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel());
+			addEmployeeLinks(employee);
 		}
 		Link link = WebMvcLinkBuilder.linkTo(EmployeeController.class).withSelfRel();
 		return CollectionModel.of(employees, link);
@@ -39,7 +39,7 @@ public class EmployeeController {
 	@GetMapping("/{id}")
 	private Employee getEmployee(@PathVariable() int id) {
 		Employee employee = employeeService.findById(id);
-		return employee.add(WebMvcLinkBuilder.linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel());
+		return addEmployeeLinks(employee);
 	}
 	
 	@PostMapping()
@@ -57,6 +57,10 @@ public class EmployeeController {
 	@DeleteMapping("/{id}")
 	private void deleteEmployee(@PathVariable() int id) {
 		employeeService.deleteById(id);
+	}
+	
+	private Employee addEmployeeLinks(Employee employee) {
+		return employee.add(WebMvcLinkBuilder.linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel());
 	}
 	
 	
