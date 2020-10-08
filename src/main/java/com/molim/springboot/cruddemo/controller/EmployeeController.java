@@ -8,25 +8,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.molim.springboot.cruddemo.dao.EmployeeDAO;
 import com.molim.springboot.cruddemo.entity.Employee;
+import com.molim.springboot.cruddemo.service.EmployeeService;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
 
 	@Autowired
-	private EmployeeDAO employeeDAO;
+	private EmployeeService employeeService;
 	
 	
 	@GetMapping()
 	private List<Employee> getEmployees() {
-		return employeeDAO.findAll();
+		return employeeService.findAll();
 	}
 	
 	@GetMapping("/{id}")
 	private Employee getEmployee(@PathVariable() int id) {
-		return employeeDAO.findById(id);
+		return employeeService.findById(id);
 	}
 	
 }
