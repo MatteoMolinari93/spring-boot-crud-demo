@@ -38,12 +38,12 @@ public class EmployeeControllerTests {
 	private EmployeeService employeeService;
 	
 	@Test
-	public void getShouldFetchAHalDocument() throws Exception {
+	public void getListShouldFetchAHalDocument() throws Exception {
 
 		given(employeeService.findAll()).willReturn(
 			Arrays.asList(
-				new Employee(1,"Frodo", "Baggins", "ring bearer"),
-				new Employee(2,"Bilbo", "Baggins", "burglar")));
+				new Employee(1,"Frodo", "Baggins", "frodo@test.com"),
+				new Employee(2,"Bilbo", "Baggins", "bilbo@test.com")));
 
 		mvc.perform(get("/employees").accept(MediaTypes.HAL_JSON_VALUE))
 			.andExpect(status().isOk())
@@ -51,7 +51,24 @@ public class EmployeeControllerTests {
 			.andExpect(checkIfHasLinksField())
 			.andExpect(jsonPath("$._embedded.employees[0].id", is(1)))
 			.andExpect(jsonPath("$._embedded.employees[0].firstName", is("Frodo")))
-			.andExpect(jsonPath("$._embedded.employees[0].lastName", is("Baggins")));
+			.andExpect(jsonPath("$._embedded.employees[0].lastName", is("Baggins")))
+			.andExpect(jsonPath("$._embedded.employees[0].email", is("frodo@test.com")));
+	}
+	
+	@Test
+	public void getResourceShouldFetchAHalDocument() throws Exception {
+
+		given(employeeService.findById(1)).willReturn(
+				new Employee(1,"Frodo", "Baggins", "frodo@email.com"));
+
+		mvc.perform(get("/employees/1").accept(MediaTypes.HAL_JSON_VALUE))
+			.andExpect(status().isOk())
+			.andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+			.andExpect(checkIfHasLinksField())
+			.andExpect(jsonPath("$.id", is(1)))
+			.andExpect(jsonPath("$.firstName", is("Frodo")))
+			.andExpect(jsonPath("$.lastName", is("Baggins")))
+			.andExpect(jsonPath("$.email", is("frodo@email.com")));
 	}
 	
 	@Test
@@ -83,7 +100,7 @@ public class EmployeeControllerTests {
 	}
 	
 	@Test
-	public void deleteShouldFetchANoDocument() throws Exception {		
+	public void deleteShouldFetchNoDocument() throws Exception {		
 		mvc.perform(delete("/employees/1"))
 			.andExpect(status().isNoContent());
 	}
