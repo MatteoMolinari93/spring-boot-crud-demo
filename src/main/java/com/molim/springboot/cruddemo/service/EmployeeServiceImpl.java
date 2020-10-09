@@ -12,9 +12,13 @@ import com.molim.springboot.cruddemo.entity.Employee;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+	private final EmployeeRepository employeeRepository;
 	
+	@Autowired
+	public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+		this.employeeRepository = employeeRepository;
+	}
+
 	@Override
 	public List<Employee> findAll() {
 		return employeeRepository.findAll();

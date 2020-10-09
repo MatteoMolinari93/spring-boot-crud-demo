@@ -80,7 +80,7 @@ public class EmployeeControllerTests {
 	}
 	
 	@Test
-	public void deleteShouldFetchANoDocumentt() throws Exception {		
+	public void deleteShouldFetchANoDocument() throws Exception {		
 		mvc.perform(delete("/employees/1"))
 			.andExpect(status().isNoContent());
 	}
