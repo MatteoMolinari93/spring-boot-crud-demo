@@ -22,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import com.molim.springboot.cruddemo.entity.Employee;
 import com.molim.springboot.cruddemo.service.EmployeeService;
@@ -47,6 +48,7 @@ public class EmployeeControllerTests {
 		mvc.perform(get("/employees").accept(MediaTypes.HAL_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+			.andExpect(checkIfHasLinksField())
 			.andExpect(jsonPath("$._embedded.employees[0].id", is(1)))
 			.andExpect(jsonPath("$._embedded.employees[0].firstName", is("Frodo")))
 			.andExpect(jsonPath("$._embedded.employees[0].lastName", is("Baggins")));
@@ -60,9 +62,10 @@ public class EmployeeControllerTests {
 				+ "\"firstName\": \"Leslie\","
 				+ "\"lastName\": \"Andrews\","
 				+ "\"email\": \"leslie@test.com\""
-				+ "}").contentType(MediaType.APPLICATION_JSON))
+				+ "}").contentType(MediaTypes.HAL_JSON_VALUE))
 			.andExpect(status().isCreated())
 			.andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+			.andExpect(checkIfHasLinksField())
 			.andExpect(jsonPath("$.id", notNullValue()));
 	}
 	
@@ -83,5 +86,9 @@ public class EmployeeControllerTests {
 	public void deleteShouldFetchANoDocument() throws Exception {		
 		mvc.perform(delete("/employees/1"))
 			.andExpect(status().isNoContent());
+	}
+	
+	private ResultMatcher checkIfHasLinksField() {
+		return jsonPath("$._links", notNullValue());
 	}
 }

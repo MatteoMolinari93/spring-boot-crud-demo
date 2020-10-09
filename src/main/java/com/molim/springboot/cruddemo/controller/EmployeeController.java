@@ -48,7 +48,7 @@ public class EmployeeController {
 	private ResponseEntity<Employee> newEmployee(@RequestBody Employee employee) {
 		employee.setId(0);
 		Employee newEmployee = employeeService.save(employee);
-		return new ResponseEntity<Employee>(newEmployee, HttpStatus.CREATED);
+		return new ResponseEntity<Employee>(addEmployeeLinks(newEmployee), HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
