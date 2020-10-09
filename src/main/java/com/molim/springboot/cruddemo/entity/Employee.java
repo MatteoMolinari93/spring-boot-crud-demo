@@ -8,12 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="employee")
 @JsonIgnoreProperties(ignoreUnknown=true)
+@Relation(collectionRelation = "employees", itemRelation = "employee")
 public class Employee extends RepresentationModel<Employee> {
 	
 	@Id
@@ -28,6 +30,17 @@ public class Employee extends RepresentationModel<Employee> {
 	private String email;
 	
 	public Employee () {}
+	
+	
+
+	public Employee(int id, String firstName, String lastName, String email) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+	}
+
+
 
 	public Employee(String firstName, String lastName, String email) {
 		this.firstName = firstName;

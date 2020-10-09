@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,9 +45,10 @@ public class EmployeeController {
 	}
 	
 	@PostMapping()
-	private void newEmployee(@RequestBody Employee employee) {
+	private ResponseEntity<Employee> newEmployee(@RequestBody Employee employee) {
 		employee.setId(0);
-		employeeService.save(employee);
+		Employee newEmployee = employeeService.save(employee);
+		return new ResponseEntity<Employee>(newEmployee, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
@@ -55,8 +58,9 @@ public class EmployeeController {
 	}
 	
 	@DeleteMapping("/{id}")
-	private void deleteEmployee(@PathVariable() int id) {
+	private ResponseEntity<Employee> deleteEmployee(@PathVariable() int id) {
 		employeeService.deleteById(id);
+		return new ResponseEntity<Employee>(HttpStatus.NO_CONTENT);
 	}
 	
 	private Employee addEmployeeLinks(Employee employee) {
